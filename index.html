@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mortgage Calculator</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- SKIP LINKS -->
+  <nav aria-label="Skip links">
+    <a href="#data-entry" class="skip-link">Skip to data entry</a>
+    <a href="#results-card" class="skip-link">Skip to results</a>
+    <a href="#visualization-card" class="skip-link">Skip to visualization</a>
+  </nav>
+
+  <!-- NOSCRIPT FALLBACK -->
+  <noscript>
+    <div class="card" style="margin:2rem auto;max-width:600px;">
+      <h2 style="font-family:Georgia,serif;color:#06005a;">Mortgage Calculator</h2>
+      <p><strong>JavaScript is required</strong> for the interactive version.</p>
+      <p>This calculator helps you estimate your annual mortgage payments based on loan amount, interest rate, and loan term.</p>
+    </div>
+  </noscript>
+
+  <div class="container">
+    <main class="content">
+
+      <!-- CARD 1 – Title and Formula -->
+      <section class="card" id="title-card">
+        <h1 class="card-title">Mortgage Calculator</h1>
+        <p class="text-sm text-gray-700 mb-3">Calculate your annual mortgage payments and see how principal and interest evolve over time.</p>
+        
+        <div class="formula-box">
+          <div class="formula-box-title">Monthly Payment Formula</div>
+          <div class="equation-container" tabindex="0" role="math"
+               aria-label="Monthly payment M equals principal P times monthly rate r times quantity 1 plus r to the n power, divided by quantity 1 plus r to the n power minus 1"
+               aria-describedby="formula-legend">
+            <div class="mathml-equation">
+              <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                <mrow>
+                  <mi mathcolor="#1e40af" mathvariant="bold">M</mi>
+                  <mo>=</mo>
+                  <mi mathcolor="#c2410c" mathvariant="bold">P</mi>
+                  <mo>×</mo>
+                  <mfrac>
+                    <mrow>
+                      <mi mathcolor="#6b21a8" mathvariant="bold">r</mi>
+                      <msup>
+                        <mrow>
+                          <mo>(</mo>
+                          <mn>1</mn>
+                          <mo>+</mo>
+                          <mi mathcolor="#6b21a8">r</mi>
+                          <mo>)</mo>
+                        </mrow>
+                        <mi mathcolor="#047857">n</mi>
+                      </msup>
+                    </mrow>
+                    <mrow>
+                      <msup>
+                        <mrow>
+                          <mo>(</mo>
+                          <mn>1</mn>
+                          <mo>+</mo>
+                          <mi mathcolor="#6b21a8">r</mi>
+                          <mo>)</mo>
+                        </mrow>
+                        <mi mathcolor="#047857">n</mi>
+                      </msup>
+                      <mo>−</mo>
+                      <mn>1</mn>
+                    </mrow>
+                  </mfrac>
+                </mrow>
+              </math>
+            </div>
+            <div class="html-equation" hidden>
+              <strong style="color:#1e40af;">M</strong> = 
+              <span style="color:#c2410c;">P</span> × 
+              [<span style="color:#6b21a8;">r</span>(1 + <span style="color:#6b21a8;">r</span>)<sup style="color:#047857;">n</sup>] / 
+              [(1 + <span style="color:#6b21a8;">r</span>)<sup style="color:#047857;">n</sup> − 1]
+            </div>
+          </div>
+          <div class="formula-legend" id="formula-legend">
+            <span class="legend-item">
+              <strong style="color:#1e40af;">M</strong> = Monthly Payment
+            </span>
+            <span class="legend-item">
+              <strong style="color:#c2410c;">P</strong> = Principal
+            </span>
+            <span class="legend-item">
+              <strong style="color:#6b21a8;">r</strong> = Monthly Rate
+            </span>
+            <span class="legend-item">
+              <strong style="color:#047857;">n</strong> = Total Months
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- MIDDLE ROW -->
+      <div class="middle-row">
+        <!-- CARD 2 – Results -->
+        <section class="card" id="results-card" tabindex="-1" aria-labelledby="results-title">
+          <h2 class="card-title" id="results-title">Results</h2>
+          <div id="results-content" aria-live="polite"></div>
+          <div id="result-announcement" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+        </section>
+
+        <!-- CARD 3 – Visualization -->
+        <section class="card" id="visualization-card" tabindex="-1" aria-labelledby="visualization-title">
+          <h2 class="card-title" id="visualization-title">Mortgage Cash Flows</h2>
+          <div class="view-controls">
+            <button id="view-chart-btn" class="toggle-btn active" aria-pressed="true">Chart</button>
+            <button id="view-table-btn" class="toggle-btn" aria-pressed="false">Table</button>
+          </div>
+
+          <div id="chart-container" class="chart-wrapper">
+            <canvas id="chart" role="img" aria-label="Stacked bar chart showing annual principal and interest payments"></canvas>
+            <div id="chart-announcement" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+          </div>
+
+          <div id="table-container">
+            <table id="data-table" tabindex="0" role="region" aria-labelledby="visualization-title">
+              <caption class="sr-only">Annual amortization schedule showing year, principal, interest, and remaining balance</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Year</th>
+                  <th scope="col">Principal</th>
+                  <th scope="col">Interest</th>
+                  <th scope="col">Total Payment</th>
+                  <th scope="col">Remaining Balance</th>
+                </tr>
+              </thead>
+              <tbody id="table-body"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <!-- CARD 4 – Data Entry -->
+      <section class="card" id="data-entry" tabindex="-1" role="region" aria-labelledby="inputs-title">
+        <h2 class="card-title" id="inputs-title">Loan Parameters</h2>
+
+        <div class="input-grid">
+          <div class="input-row">
+            <label for="principal" class="input-label-inline">
+              Loan Amount
+              <span class="text-red-500">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input type="number" id="principal" class="input-field-inline"
+                     min="1000" max="10000000" step="1000" value="800000"
+                     aria-required="true"
+                     aria-describedby="principal-help">
+            </div>
+            <span id="principal-help" class="input-help">Total borrowed</span>
+          </div>
+
+          <div class="input-row">
+            <label for="rate" class="input-label-inline">
+              Annual Rate (%)
+              <span class="text-red-500">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input type="number" id="rate" class="input-field-inline"
+                     min="0.1" max="20" step="0.1" value="6"
+                     aria-required="true"
+                     aria-describedby="rate-help">
+            </div>
+            <span id="rate-help" class="input-help">Interest rate</span>
+          </div>
+
+          <div class="input-row">
+            <label for="years" class="input-label-inline">
+              Loan Term (years)
+              <span class="text-red-500">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input type="number" id="years" class="input-field-inline"
+                     min="1" max="40" step="1" value="30"
+                     aria-required="true"
+                     aria-describedby="years-help">
+            </div>
+            <span id="years-help" class="input-help">Length of loan</span>
+          </div>
+        </div>
+
+        <div id="validation-summary" class="validation-summary" role="alert" aria-live="polite"
+             style="display:none;">
+          <div class="validation-title">Please correct the following:</div>
+          <ul id="validation-list"></ul>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script type="module" src="./calculator.js"></script>
+  <script type="module">
+    // Fallback for browsers that don't support MathML
+    if (!CSS.supports('math-style: normal')) {
+      document.querySelectorAll('.mathml-equation').forEach(el => el.hidden = true);
+      document.querySelectorAll('.html-equation').forEach(el => el.hidden = false);
+    }
+  </script>
+</body>
+</html>
