@@ -13,17 +13,17 @@ export function renderTable({ schedule }) {
   const tbody = $('#table-body');
   
   if (!schedule || schedule.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No data available</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:1rem;">No data available</td></tr>';
     return;
   }
 
-  tbody.innerHTML = schedule.map((row, index) => `
+  tbody.innerHTML = schedule.map(row => `
     <tr>
-      <th scope="row">Year ${row.year}</th>
-      <td>$${formatCurrency(row.principal)}</td>
-      <td>$${formatCurrency(row.interest)}</td>
-      <td>$${formatCurrency(row.totalPayment)}</td>
-      <td>$${formatCurrency(row.remainingBalance)}</td>
+      <td data-label="Year">Year ${row.year}</td>
+      <td data-label="Principal"><span>$${formatCurrency(row.principal)}</span></td>
+      <td data-label="Interest"><span>$${formatCurrency(row.interest)}</span></td>
+      <td data-label="Total Payment"><span>$${formatCurrency(row.totalPayment)}</span></td>
+      <td data-label="Remaining Balance"><span>$${formatCurrency(row.remainingBalance)}</span></td>
     </tr>
   `).join('');
 }

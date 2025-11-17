@@ -1,5 +1,5 @@
 /**
- * calculator.js – Main Entry Point
+ * calculator.js â€“ Main Entry Point
  * Mortgage Calculator with Annual Payment Schedule
  * Follows accessibility best practices and modular architecture
  */
@@ -16,12 +16,34 @@ import { validateAll, setupFieldValidation } from './modules/validation.js';
 function init() {
   setupInputs();
   setupViewToggle();
+  setupSkipLink();
   subscribe(updateAll);
   detectNarrowScreen();
   window.addEventListener('resize', debounce(detectNarrowScreen, 200));
   
   // Initial calculation
   updateAll(state);
+}
+
+/* ---------- SKIP LINK HANDLER ---------- */
+function setupSkipLink() {
+  const skipLink = document.querySelector('.skip-link[href="#data-table"]');
+  if (skipLink) {
+    skipLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      // Switch to table view
+      setState({ view: 'table' });
+      updateButtonStates();
+      // Focus the table after a short delay to ensure it's visible
+      setTimeout(() => {
+        const table = $('#data-table');
+        if (table) {
+          table.focus();
+          table.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+    });
+  }
 }
 
 /* ---------- INPUT HANDLERS ---------- */
