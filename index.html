@@ -34,64 +34,71 @@
         
         <div class="formula-box">
           <div class="formula-box-title">Monthly Payment Formula</div>
-          <div class="equation-container" tabindex="0" role="math"
-               aria-label="Monthly payment M equals principal P times monthly rate r times quantity 1 plus r to the n power, divided by quantity 1 plus r to the n power minus 1"
-               aria-describedby="formula-legend">
-            <div class="mathml-equation">
-              <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
-                <mrow>
-                  <mi mathcolor="#3c6ae5" mathvariant="bold">M</mi>
-                  <mo>=</mo>
-                  <mi mathcolor="#b95b1d" mathvariant="bold">P</mi>
-                  <mo>×</mo>
-                  <mfrac>
-                    <mrow>
-                      <mi mathcolor="#7a46ff" mathvariant="bold">r</mi>
-                      <msup>
-                        <mrow>
-                          <mo>(</mo>
-                          <mn>1</mn>
-                          <mo>+</mo>
-                          <mi mathcolor="#7a46ff">r</mi>
-                          <mo>)</mo>
-                        </mrow>
-                        <mi mathcolor="#047857">n</mi>
-                      </msup>
-                    </mrow>
-                    <mrow>
-                      <msup>
-                        <mrow>
-                          <mo>(</mo>
-                          <mn>1</mn>
-                          <mo>+</mo>
-                          <mi mathcolor="#7a46ff">r</mi>
-                          <mo>)</mo>
-                        </mrow>
-                        <mi mathcolor="#047857">n</mi>
-                      </msup>
-                      <mo>âˆ’</mo>
-                      <mn>1</mn>
-                    </mrow>
-                  </mfrac>
-                </mrow>
-              </math>
-            </div>
-            <div class="html-equation" hidden>
-              <strong style="color:#3c6ae5;">M</strong> = 
-              <span style="color:#b95b1d;">P</span> × 
-              [<span style="color:#7a46ff;">r</span>(1 + <span style="color:#7a46ff;">r</span>)<sup style="color:#047857;">n</sup>] / 
-              [(1 + <span style="color:#7a46ff;">r</span>)<sup style="color:#047857;">n</sup> âˆ’ 1]
-            </div>
-          </div>
+<div class="equation-container" tabindex="0" role="math"
+     aria-label="Monthly payment M equals principal P times periodic rate r times open parenthesis 1 plus r close parenthesis to the n power, divided by open parenthesis 1 plus r close parenthesis to the n power minus 1"
+     aria-describedby="formula-legend">
+
+  <!-- MathML (corrected) -->
+  <div class="mathml-equation">
+    <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+      <mrow>
+        <mi mathcolor="#1e40af" mathvariant="bold">M</mi>
+        <mo>=</mo>
+        <mi mathcolor="#c2410c" mathvariant="bold">P</mi>
+        <mo>&times;</mo>
+        <mfrac>
+          <mrow>
+            <mi mathcolor="#6b21a8" mathvariant="bold">r</mi>
+            <msup>
+              <mrow>
+                <mo>(</mo><mn>1</mn><mo>+</mo><mi mathcolor="#6b21a8">r</mi><mo>)</mo>
+              </mrow>
+              <mi mathcolor="#047857">n</mi>
+            </msup>
+          </mrow>
+          <mrow>
+            <msup>
+              <mrow>
+                <mo>(</mo><mn>1</mn><mo>+</mo><mi mathcolor="#6b21a8">r</mi><mo>)</mo>
+              </mrow>
+              <mi mathcolor="#047857">n</mi>
+            </msup>
+            <mo>&minus;</mo>
+            <mn>1</mn>
+          </mrow>
+        </mfrac>
+      </mrow>
+    </math>
+  </div>
+
+  <!-- HTML fallback (stacked fraction, encoding-safe) -->
+  <div class="html-equation" hidden>
+    <strong style="color:#1e40af;">M</strong> =
+    <span style="color:#c2410c;">P</span>
+    &times;
+    <span class="fraction" style="display:inline-block; vertical-align:middle; text-align:center;">
+      <span class="numerator" style="display:block; border-bottom:1px solid currentColor; padding:0 .15em .1em; line-height:1.2;">
+        <span style="color:#6b21a8;">r</span>(1 + <span style="color:#6b21a8;">r</span>)<sup style="color:#047857;">n</sup>
+      </span>
+      <span class="denominator" style="display:block; padding:.1em .15em 0; line-height:1.2;">
+        (1 + <span style="color:#6b21a8;">r</span>)<sup style="color:#047857;">n</sup> &minus; 1
+      </span>
+    </span>
+  </div>
+</div>
+
+
+
+
           <div class="formula-legend" id="formula-legend">
             <span class="legend-item">
-              <strong style="color:#3c6ae5;">M</strong> = Monthly Payment
+              <strong style="color:#1e40af;">M</strong> = Monthly Payment
             </span>
             <span class="legend-item">
-              <strong style="color:#b95b1d;">P</strong> = Principal
+              <strong style="color:#c2410c;">P</strong> = Principal
             </span>
             <span class="legend-item">
-              <strong style="color:#7a46ff;">r</strong> = Monthly Rate
+              <strong style="color:#6b21a8;">r</strong> = Monthly Rate
             </span>
             <span class="legend-item">
               <strong style="color:#047857;">n</strong> = Total Months

@@ -33,11 +33,11 @@ export function renderChart({ schedule }) {
   }
   legend.innerHTML = `
     <span class="legend-item">
-      <span class="legend-color" style="background-color: #4476ff;"></span>
+      <span class="legend-color" style="background-color: #3c6ae5;"></span>
       Interest Payments
     </span>
     <span class="legend-item">
-      <span class="legend-color" style="background-color: #10b981;"></span>
+      <span class="legend-color" style="background-color: #047857;"></span>
       Principal Amortization
     </span>
   `;
@@ -59,15 +59,15 @@ export function renderChart({ schedule }) {
         {
           label: 'Interest',
           data: interestData,
-          backgroundColor: '#4476ff',
-          borderColor: '#3b66cc',
+          backgroundColor: '#3c6ae5',
+          borderColor: '#2563eb',
           borderWidth: 1
         },
         {
           label: 'Principal',
           data: principalData,
-          backgroundColor: '#10b981',
-          borderColor: '#059669',
+          backgroundColor: '#047857',
+          borderColor: '#065f46',
           borderWidth: 1
         }
       ]
@@ -226,16 +226,16 @@ function createBarButtons(schedule, container) {
  * @param {number} index - Bar index to highlight
  */
 function highlightBar(index) {
-  // Update interest dataset
+  // Update interest dataset (blue)
   const interestDataset = chart.data.datasets[0];
   interestDataset.backgroundColor = interestDataset.data.map((_, i) => 
-    i === index ? '#2563eb' : '#4476ff'
+    i === index ? '#2563eb' : '#3c6ae5'
   );
   
-  // Update principal dataset
+  // Update principal dataset (green)
   const principalDataset = chart.data.datasets[1];
   principalDataset.backgroundColor = principalDataset.data.map((_, i) => 
-    i === index ? '#059669' : '#10b981'
+    i === index ? '#065f46' : '#047857'
   );
   
   chart.update('none');

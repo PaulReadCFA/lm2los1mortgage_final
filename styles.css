@@ -1,7 +1,8 @@
 /* --------------------------------------------------------------
-   Mortgage Calculator – WCAG AA Compliant, Responsive
+   Mortgage Calculator -- WCAG AA Compliant, Responsive
    Annual Payment Focus with Accessibility Best Practices
    CFA-Branded Color Palette
+   IMPROVED: Better responsive behavior for tables and result boxes
    -------------------------------------------------------------- */
 :root {
   /* Primary Data Colors - All meet WCAG AA (4.5:1 minimum) */
@@ -48,6 +49,13 @@
   --color-red-50: #fef2f2;
   --color-red-200: #fecaca;
   --color-red-800: #991b1c;
+  
+  /* Background Colors from Style Guide */
+  --color-bg-blue: #eff6ff;
+  --color-bg-purple: #faf5ff;
+  --color-bg-orange: #fff7ed;
+  --color-bg-green: #f0fdf4;
+  --color-bg-teal: #f0fdfa;
 }
 
 /* Reset & base */
@@ -65,7 +73,7 @@ html {
 body { 
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
   background: var(--color-gray-50); 
-  color: #1f2937; 
+  color: var(--color-gray-800); 
   line-height: 1.5; 
   padding: 0 1.5rem 1.5rem; 
   min-height: 100vh; 
@@ -83,7 +91,7 @@ body {
 }
 
 /* Utility classes */
-.text-red-500 { color: #dc2626; }
+.text-red-500 { color: var(--color-red-800); }
 .text-gray-700 { color: var(--color-gray-700); }
 .text-sm { font-size: 0.875rem; }
 .ml-1 { margin-left: 0.25rem; }
@@ -103,7 +111,7 @@ body {
 
 /* Cards */
 .card { 
-  background: #fff; 
+  background: white; 
   border: 1px solid var(--color-gray-100); 
   border-radius: 1rem; 
   padding: 1.25rem; 
@@ -118,14 +126,15 @@ body {
   font-weight: 400; 
 }
 
-/* Middle row – matches bond calculator (640px, 2:4 grid) */
+/* Middle row -- Switch to single column earlier (768px instead of 640px) */
 .middle-row { 
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.5rem; 
 }
 
-@media (min-width: 640px) { 
+/* Use 768px breakpoint for better tablet/medium screen handling */
+@media (min-width: 768px) { 
   .middle-row { 
     grid-template-columns: repeat(6, 1fr);
   } 
@@ -137,7 +146,21 @@ body {
   } 
 }
 
-/* INPUTS – inline layout */
+/* Prevent any horizontal overflow */
+html, body { 
+  overflow-x: hidden; 
+}
+
+.container {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.card, .middle-row {
+  overflow: hidden;
+}
+
+/* INPUTS -- inline layout */
 .input-grid { 
   display: flex; 
   flex-wrap: wrap;
@@ -234,7 +257,7 @@ body {
 .toggle-btn { 
   padding: 0.625rem 1.25rem; 
   border: 2px solid var(--color-gray-300); 
-  background: #fff; 
+  background: white; 
   border-radius: 0.5rem; 
   cursor: pointer;
   font-size: 0.9375rem;
@@ -250,9 +273,9 @@ body {
 }
 
 .toggle-btn.active { 
-  background: #1e40af;
-  color: #fff; 
-  border-color: #1e40af;
+  background: var(--color-primary-dark-blue);
+  color: white; 
+  border-color: var(--color-primary-dark-blue);
 }
 
 .toggle-btn:disabled { 
@@ -292,7 +315,7 @@ body {
   height: 24rem;
   position: relative;
   border-radius: 0.5rem;
-  background: #f8fafc;
+  background: var(--color-gray-50);
   border: 1px solid var(--color-gray-200);
 }
 
@@ -306,12 +329,14 @@ body {
   height: 100% !important;
 }
 
+/* Table container with better overflow handling */
 #table-container {
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  -webkit-overflow-scrolling: touch;
   max-width: 100%;
   width: 100%;
   position: relative;
+  padding: 0 0.25rem; /* Small padding to prevent edge cutoff */
 }
 
 /* Visual hint that table is scrollable */
@@ -321,24 +346,24 @@ body {
   top: 0;
   right: 0;
   bottom: 0;
-  width: 30px;
-  background: linear-gradient(to left, rgba(255, 255, 255, 0.9), transparent);
+  width: 40px;
+  background: linear-gradient(to left, rgba(255, 255, 255, 0.95), transparent);
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.3s;
 }
 
-@media (max-width: 800px) {
+/* Show scroll indicator when table might overflow - adjusted breakpoint */
+@media (max-width: 1000px) and (min-width: 769px) {
   #table-container::after {
     opacity: 1;
   }
 }
 
-/* Ensure table doesn't break layout */
-@media (max-width: 900px) {
-  #table-container {
-    margin: 0 -1.25rem; /* Negative margin to use card padding space */
-    padding: 0 1.25rem; /* Restore padding inside scrollable area */
+/* Hide in card view since cards don't scroll horizontally */
+@media (max-width: 768px) {
+  #table-container::after {
+    opacity: 0;
   }
 }
 
@@ -346,7 +371,7 @@ body {
   width: 100%; 
   border-collapse: collapse; 
   font-size: 0.9375rem;
-  min-width: 600px; /* Force table to be wide enough to require scrolling on small screens */
+  min-width: 450px; /* Reduced from 500px for better fit */
 }
 
 #data-table th, 
@@ -372,59 +397,77 @@ body {
 }
 
 #data-table tbody tr:nth-child(even) {
-  background: #fafbfc;
-}
-
-#data-table tbody tr:nth-child(even):hover {
   background: var(--color-gray-50);
 }
 
-/* Results */
+#data-table tbody tr:nth-child(even):hover {
+  background: var(--color-gray-100);
+}
+
+/* Responsive table adjustments for medium screens */
+@media (max-width: 1000px) and (min-width: 769px) {
+  #data-table {
+    font-size: 0.8125rem; /* Smaller text */
+    min-width: 420px; /* Narrower minimum */
+  }
+  
+  #data-table th,
+  #data-table td {
+    padding: 0.5rem; /* Tighter padding */
+  }
+}
+
+/* Results - IMPROVED with fluid sizing */
 .results-grid { 
   display: flex;
   flex-direction: column;
-  gap: 1.5rem; 
+  gap: 1rem; /* Reduced from 1.5rem */
 }
 
 .result-box { 
-  padding: 1rem; 
+  padding: 0.875rem; /* Slightly reduced */
   border-radius: 0.5rem; 
   border: 1px solid;
 }
 
 .result-title {
-  font-size: 0.875rem;
+  font-size: 0.8125rem; /* Slightly smaller */
   color: var(--color-gray-700);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.375rem; /* Reduced */
   font-weight: 600;
 }
 
+/* IMPROVED: Fluid typography that scales smoothly */
 .result-value { 
-  font-size: 1.875rem; 
+  font-size: clamp(1.125rem, 3.5vw + 0.5rem, 1.875rem); /* Fluid 18px-30px */
   font-weight: 400;
   font-family: Georgia, serif;
   line-height: 1.2;
-  word-break: break-word; /* Prevent overflow */
+  word-break: break-word;
 }
 
-/* Responsive typography for small screens */
-@media (max-width: 640px) {
-  .result-value {
-    font-size: 1.5rem; /* 24px - still meets large text requirements */
-  }
-}
-
-@media (max-width: 400px) {
-  .result-value {
-    font-size: 1.25rem; /* 20px - still large text at 14pt+ bold equivalent */
-  }
-  
-  .result-title {
-    font-size: 0.8125rem; /* 13px - slightly smaller but still readable */
+/* Responsive adjustments for result boxes */
+@media (max-width: 768px) {
+  .results-grid {
+    gap: 0.875rem;
   }
   
   .result-box {
-    padding: 0.875rem; /* Slightly tighter padding */
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .result-box {
+    padding: 0.625rem;
+  }
+  
+  .results-grid {
+    gap: 0.75rem;
+  }
+  
+  .result-title {
+    font-size: 0.75rem;
   }
 }
 
@@ -434,36 +477,36 @@ body {
   margin-top: 0.5rem;
 }
 
-/* Individual result box colors */
+/* Individual result box colors - Blue & Green theme */
 .result-box-monthly {
-  background-color: #dbeafe;
-  border-color: #3b82f6;
-  color: #1e40af;
+  background-color: var(--color-bg-blue);
+  border-color: var(--color-blue-interactive);
+  color: var(--color-primary-dark-blue);
 }
 
 .result-box-interest {
-  background-color: rgba(68, 118, 255, 0.1);
-  border-color: var(--color-primary);
+  background-color: var(--color-bg-blue);
+  border-color: var(--color-blue-interactive);
 }
 
 .result-box-interest .result-value {
-  color: var(--color-primary);
+  color: var(--color-blue-interactive);
 }
 
 .result-box-total {
-  background-color: rgba(122, 70, 255, 0.1);
-  border-color: var(--color-purple);
+  background-color: var(--color-bg-green);
+  border-color: var(--color-green-data-alt);
 }
 
 .result-box-total .result-value {
-  color: var(--color-purple);
+  color: var(--color-green-data-alt);
 }
 
 /* Formula box */
 .formula-box { 
   border-left: 4px solid var(--color-primary); 
   padding: 1rem 1.25rem; 
-  background: #ffffff; 
+  background: white; 
   border-radius: 0 0.5rem 0.5rem 0; 
   margin-top: 0.75rem; 
 }
@@ -567,8 +610,8 @@ nav[aria-label="Skip links"] {
   outline-offset: 2px;
 }
 
-/* Narrow-screen force-table */
-@media (max-width: 480px) {
+/* Narrow-screen force-table - Switch earlier at 768px */
+@media (max-width: 768px) {
   .force-table #view-chart-btn { 
     opacity: 0.5; 
     pointer-events: none; 
@@ -584,7 +627,7 @@ nav[aria-label="Skip links"] {
   }
 }
 
-/* Focus rings for all tabindex values (including -1 for skip links) */
+/* Focus rings for all tabindex values */
 section[tabindex]:focus,
 table[tabindex]:focus,
 canvas[tabindex]:focus { 
@@ -655,7 +698,7 @@ canvas[tabindex]:focus {
   .card {
     break-inside: avoid;
     box-shadow: none;
-    border: 1px solid #000;
+    border: 1px solid var(--color-gray-800);
   }
   
   #chart-container {
@@ -667,8 +710,8 @@ canvas[tabindex]:focus {
   }
 }
 
-/* ——————— FINAL MOBILE CARDS – ALWAYS FITS, KICKS IN AT 900px ——————— */
-@media (max-width: 900px) {
+/* -------------- MOBILE CARD VIEW -- Switch at 768px instead of 900px -------------- */
+@media (max-width: 768px) {
   #data-table,
   #data-table thead,
   #data-table tbody,
@@ -686,18 +729,18 @@ canvas[tabindex]:focus {
     border: 1px solid var(--color-gray-300);
     border-radius: 0.75rem;
     margin: 0 auto 1rem;
-    max-width: 100%;                    /* ← critical */
-    width: calc(100% - 2rem);           /* ← critical – safe margins */
-    background: #fff;
+    max-width: 100%;
+    width: calc(100% - 2rem); /* More margin to prevent cutoff */
+    background: white;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     overflow: hidden;
     box-sizing: border-box;
   }
 
   #data-table td[data-label="Year"] {
-    padding: 0.75rem 1rem;
+    padding: 0.625rem 0.875rem; /* Reduced padding */
     background: var(--color-gray-50);
-    font-size: 1.25rem;
+    font-size: 1.125rem; /* Slightly smaller */
     font-weight: 700;
     color: var(--color-primary-dark-blue);
     border-bottom: 1px solid var(--color-gray-300);
@@ -710,10 +753,10 @@ canvas[tabindex]:focus {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 1rem;
+    padding: 0.5rem 0.875rem; /* Reduced padding */
     border-bottom: 1px solid var(--color-gray-200);
-    gap: 0.75rem;
-    flex-wrap: wrap;                    /* ← allows wrapping only when truly needed */
+    gap: 0.5rem;
+    flex-wrap: nowrap;
   }
 
   #data-table td:not([data-label="Year"]):last-child { border-bottom: none; }
@@ -722,26 +765,76 @@ canvas[tabindex]:focus {
     content: attr(data-label);
     font-weight: 600;
     color: var(--color-gray-700);
-    flex: 1;
-    min-width: 120px;
+    font-size: 0.8125rem; /* Smaller label */
+    flex: 0 0 auto;
+    min-width: 0;
+    max-width: 50%;
   }
 
   #data-table td:not([data-label="Year"]) span {
     font-weight: 600;
     color: var(--color-gray-900);
-    white-space: nowrap;
-    flex-shrink: 0;
+    white-space: normal; /* Allow wrapping if absolutely necessary */
+    flex-shrink: 1; /* Allow shrinking */
+    text-align: right;
+    font-size: 0.875rem; /* Smaller value */
+    word-break: break-word; /* Break long numbers if needed */
   }
 
-  /* Ultimate fallback for crazy-narrow phones – gracefully wrap the number */
+  /* Graceful handling for narrow screens */
+  @media (max-width: 400px) {
+    #data-table tr {
+      width: calc(100% - 0.5rem);
+    }
+    
+    #data-table td[data-label="Year"] {
+      font-size: 1rem;
+      padding: 0.5rem 0.75rem;
+    }
+    
+    #data-table td:not([data-label="Year"]) {
+      padding: 0.5rem 0.75rem;
+      gap: 0.375rem;
+    }
+    
+    #data-table td:not([data-label="Year"])::before {
+      font-size: 0.75rem;
+    }
+    
+    #data-table td:not([data-label="Year"]) span {
+      font-size: 0.8125rem;
+    }
+  }
+
+  /* Ultimate fallback for very narrow phones */
   @media (max-width: 340px) {
     #data-table td:not([data-label="Year"]) {
       flex-direction: column;
       align-items: flex-start;
       gap: 0.25rem;
     }
+    #data-table td:not([data-label="Year"])::before {
+      max-width: 100%;
+    }
     #data-table td:not([data-label="Year"]) span {
       align-self: flex-end;
     }
   }
 }
+
+/* Keep MathML tokens inline and tidy */
+math, mrow, mfrac, msup, msub, mtext, mi, mo, mn {
+  display: inline;
+  white-space: normal;
+  line-height: 1.25;
+}
+
+/* Stabilize numerals/operators in both versions */
+.equation-container {
+  font-variant-numeric: lining-nums tabular-nums;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Ensure fallback pieces stay inline */
+.html-equation .op { font-weight: 500; display: inline; }

@@ -1,7 +1,8 @@
 /**
- * calculator.js â€“ Main Entry Point
+ * calculator.js -- Main Entry Point
  * Mortgage Calculator with Annual Payment Schedule
  * Follows accessibility best practices and modular architecture
+ * IMPROVED: Updated breakpoint to 768px for better responsiveness
  */
 
 import { state, setState, subscribe } from './modules/state.js';
@@ -148,8 +149,9 @@ function updateButtonStates() {
 }
 
 /* ---------- RESPONSIVE BEHAVIOR ---------- */
+/* IMPROVED: Updated breakpoint from 480px to 768px for better tablet/mobile handling */
 function detectNarrowScreen() {
-  const narrow = window.innerWidth <= 480;
+  const narrow = window.innerWidth <= 768;
   
   if (narrow) {
     document.body.classList.add('force-table');
